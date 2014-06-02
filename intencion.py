@@ -22,7 +22,7 @@ import freeling
 
 ## Modify this line to be your FreeLing installation directory
 FREELINGDIR = "/usr/local";
-FREELINGDIR = "/home/ira/Desktop/myfreeling";
+FREELINGDIR = directorio;
 
 DATA = FREELINGDIR+"/data";
 LANG="/es";
