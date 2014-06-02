@@ -13,9 +13,9 @@ Funcionamiento
 
 El script intencion.py analiza el resultado de ejecutar el análisis sintáctico de freeling sobre la cadena de texto, para extraer la intención del usuario. Lleva a cabo dos funciones:
 
-- Obtención Acción y Producto
+- Obtención Acción y Producto:
 Análisis de las distintas partes de la oración para extraer la acción, producto y parámetros, asociados a la intención del usuario.
 Para obtener la acción se busca la palabra con la etiqueta 'grup-verb'. Para la obtención del producto se busca la palabra con etiqueta 'sn' y también se buscan los verbos asociados con los distintos productos ( como por ejemplo de transferencia, transferir). Adicionalmente se extraen otros parámetros: el objeto indirecto que identifica a quien va dirigida la acción o los adjetivos asociados al producto extraido.
 
-- Explorar sinónimos
+- Explorar sinónimos:
 Para comprobar si la acción/producto extraído, se corresponden con alguna accion/producto  del BBVA, se extraen los sinónimos tanto de la acción/producto extraido como del conjunto de acciones/produtos de BBVA. Para la obtención de los sinónimos de las distintas palabras se utiliza el modulo de Freeling 'Semantic Database Module'
