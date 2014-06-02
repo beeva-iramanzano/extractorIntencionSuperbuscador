@@ -22,7 +22,7 @@ import freeling
 
 ## Modify this line to be your FreeLing installation directory
 FREELINGDIR = "/usr/local";
-FREELINGDIR = directorio;
+FREELINGDIR = (os.environ ['FREELING_PYTHON'] )  ;
 
 DATA = FREELINGDIR+"/data";
 LANG="/es";
