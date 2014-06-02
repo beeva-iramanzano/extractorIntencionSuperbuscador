@@ -42,7 +42,7 @@ productos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña'
 productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña' ,'transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 sinonimos_transferencia= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 
-fichero = open('../extractorintencion/salida.txt')
+fichero = open('../extractorintencion/analisis_freeling.txt')
 linea=fichero.readline();
 contador_lineas=1;
 
