@@ -7,9 +7,13 @@
 ## For example:
 ##     ./sample.py <test.txt >test_out.txt
 
-import sys
+
+import os 
 ## Direcorio de instalación del API de python de freeling
-sys.path.append( "/home/ira/Desktop/myfreeling/APIs/python/" )
+directorio = (os.environ ['FREELING_PYTHON'] ) +"/APIs/python"
+print (directorio)
+import sys
+sys.path.append( directorio  )
 import freeling
 
 ## ----------------------------------------------
@@ -39,7 +43,7 @@ productos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña'
 productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña' ,'transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 sinonimos_transferencia= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 
-fichero = open('/home/ira/Desktop/myfreeling/APIs/python/salida.txt')
+fichero = open('salida.txt')
 linea=fichero.readline();
 contador_lineas=1;
 
