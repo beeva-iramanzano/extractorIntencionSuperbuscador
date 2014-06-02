@@ -11,7 +11,6 @@
 import os 
 ## Direcorio de instalación del API de python de freeling
 directorio = (os.environ ['FREELING_PYTHON'] ) +"/APIs/python"
-print (directorio)
 import sys
 sys.path.append( directorio  )
 import freeling
@@ -43,7 +42,7 @@ productos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña'
 productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña' ,'transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 sinonimos_transferencia= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 
-fichero = open('salida.txt')
+fichero = open('../extractorintencion/salida.txt')
 linea=fichero.readline();
 contador_lineas=1;
 
