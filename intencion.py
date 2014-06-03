@@ -43,7 +43,7 @@ productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo'  ,'tr
 productos_verbo= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 productor_clave=['clave', 'contraseña']
 
-fichero = open('../extractorintencion/analisis_freeling.txt')
+fichero = open('../extractorIntencionSuperbuscador/analisis_freeling.txt')
 linea=fichero.readline();
 contador_lineas=1;
 
