@@ -33,14 +33,15 @@ semantic = freeling.semanticDB (DATA + LANG +"/semdb.dat");
 
 #Conjunto de acciones
 acciones = ['consultar', 'realizar', 'ayuda', 'devolver', 'pagar', 'modificar' ]
+acciones_sustantivo= ['ayuda']
 #acciones_sinonimos = ['consultar','ejecutar','realizar','causar','crear','hacer','realizar','organizar','realizar','efectuar','cumplir',' modificar','alterar','cambiar','','alterar','arreglar','pagar','avalar','subvencionar','abonar','liquidar','costear','dar','devengar','rendir','compensar','enmendarse',
 #'expiar','ayudar','auxiliar','asistir','devolver','reponer','llevar_de_regreso','regresar','traer_de_regreso','reembolsar','volver_a_pagar','reembolsar']
 
-
 #Conjunto de productos
-productos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña', 'seguro']
-productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'contraseña' ,'transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
-sinonimos_transferencia= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
+productos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' ,  'seguro', 'impuesto', 'cuenta']
+productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo'  ,'transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
+productos_verbo= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
+productor_clave=['clave', 'contraseña']
 
 fichero = open('../extractorintencion/analisis_freeling.txt')
 linea=fichero.readline();
@@ -56,15 +57,41 @@ busqueda_OI=0;
 contador_lineas_OD=0;
 contador_lineas_OI=0;
 sin_accion=1;
+flag_negacion=0;
+linea_negacion=0;
 
 #Obtengo los sinónimos de mis acciones
 
 #Leo el fichero
 while linea:
-  #print (" LINEA: " + str(linea.find('sn')) + " / " + linea)
-  #si no es una linea en blanco
-  #Si la línea es la de la acción principal
-  if linea.find('grup-verb')>=0:
+  #print (" LINEA: " + str(linea.find('sn/')) + " / " + linea)
+  ini =linea.find('(')+1;
+  fin =linea.find(')');
+  lineainfo = linea[ini:fin];
+  infoini= lineainfo.find(' ')
+  infoini=lineainfo.find(' ', infoini+1)
+  infofin=lineainfo.find(' ', infoini+1)
+  etimorfo=lineainfo[infoini:infofin]
+  #print (" Etiqueta norfologica " + etimorfo)
+
+  ## Si la línea contiene una negación
+  if linea.find('neg')>=0 :
+    flag_negacion=1;
+    linea_negacion=contador_lineas;
+
+  #Compruebo si en la línea anterior había una negación, y en esta línea hay un participio
+  #es que he detectado un adjetivo con negación
+  elif flag_negacion==1 and (linea_negacion+1)==contador_lineas and (etimorfo.find('VMP')>=0) :
+    print ("Encontrado ADJETIVO, con NEGACION");
+    ini =linea.find('(')+1;
+    fin =linea.find('-',ini,len(linea))-8;
+    directo = linea[ini:fin];
+    find= directo.find(' ')
+    parametros_inferidos = "no " + directo[:find]
+
+
+  #Si la línea contiene un grupo verbal
+  elif linea.find('grup-verb')>=0:
     #print ("Encontrado GRUPO VERBAL");
     ini =linea.find('(')+1;
     fin =linea.find('-',ini,len(linea))-8;
@@ -99,16 +126,17 @@ while linea:
         cont=cont+1;
       pos = senses.find(':0',pos+2,len(senses));
 
-      #Si no he encontrado una accion asociada, busco en las acciones sinonimos de los productos
+      #Si no he encontrado una accion asociada, busco en el listado de verbos asociados a los productos
       cont=0;
-      while accion_inferida=="" and cont<len(sinos):
+      while producto_inferido=="" and cont<len(sinos):
         sino=sinos[cont]
-        for a in sinonimos_transferencia:
+        for a in productos_verbo:
           if a==sino:
             producto_inferido="transferencia"
             encontrado_producto=1
             #print ("Accion inferida: " +accion_inferida)
         cont=cont+1;
+
       pos = senses.find(':0',pos+2,len(senses));
 
 
@@ -139,14 +167,23 @@ while linea:
         sinos= senseinfo.words;
         #for sino in sinos:
         #  print ("sinonimo: " + sino)
-        #Miro con cual de las acciones se corresponde la accion extraida
-        #Comparo todas las acciones con todos los sinonimos
+        #Miro con cual de las productos se corresponde la accion extraida
+        #Comparo todos los productos con todos los sinonimos
         cont=0;
         while producto_inferido=="" and cont<len(sinos):
           sino=sinos[cont]
           for p in productos:
             if p==sino:
               producto_inferido=p
+              encontrado_producto=1
+              #print ("Producto inferido: " +producto_inferido)
+          cont=cont+1;
+        cont=0;
+        while producto_inferido=="" and cont<len(sinos):
+          sino=sinos[cont]
+          for p in productor_clave:
+            if p==sino:
+              producto_inferido="clave"
               encontrado_producto=1
               #print ("Producto inferido: " +producto_inferido)
           cont=cont+1;
@@ -169,8 +206,8 @@ while linea:
     else:
       busqueda_OI=1;
 
-  elif linea.find('sn')>=0 :
-    ##print ("Encontrado SINTAGMA NOMINAL");
+  elif linea.find('sn/')>=0 :
+    #print ("Encontrado SINTAGMA NOMINAL");
     #Si la línea contiene un sintagma nominal,
     ini =linea.find('(')+1;
     fin =linea.find('-',ini,len(linea))-8;
@@ -191,8 +228,8 @@ while linea:
       sinos= senseinfo.words;
       #for sino in sinos:
         #print ("sinonimo: " + sino)
-      #Miro con cual de las acciones se corresponde la accion extraida
-      #Comparo todas las acciones con todos los sinonimos
+      #Miro con cual de las productos se corresponde la accion extraida
+      #Comparo todos los productos con todos los sinonimos
       cont=0;
       while producto_inferido=="" and cont<len(sinos):
         sino=sinos[cont]
@@ -202,24 +239,48 @@ while linea:
             encontrado_producto=1
             #print ("Producto inferido: " +producto_inferido)
         cont=cont+1;
-
+      cont=0;
+      while producto_inferido=="" and cont<len(sinos):
+        sino=sinos[cont]
+        for p in productor_clave:
+          if p==sino:
+            producto_inferido="clave"
+            encontrado_producto=1
+            #print ("Producto inferido: " +producto_inferido)
+        cont=cont+1;
+      
+      #Compruebo si aunque el sustantivo no se haya correspondido con ningún producto
+      #se corresponde con los sustantivos de las acciones
+      cont=0;
+      while accion_inferida=="" and cont<len(sinos):
+        sino=sinos[cont]
+        for a in acciones_sustantivo:
+          if a==sino:
+            accion_inferida=a
+            encontrado_producto=1
+            #print ("Accion inferida: " +accion_inferida)
+        cont=cont+1;
+      pos = senses.find(':0',pos+2,len(senses));
       pos = senses.find(':0',pos+2,len(senses));
 
 
-  ##Si la línea contiene un adejtivo
+  ##Si la línea contiene un adjetivo
   elif linea.find('adj')>=0 and encontrado_producto==1 :
-    ##print ("Encontrado ADJETIVO ");
-    #Si la línea contiene un sintagma nominal,
+    #print ("Encontrado ADJETIVO ");
     ini =linea.find('(')+1;
     fin =linea.find('-',ini,len(linea))-8;
     directo = linea[ini:fin];
     find= directo.find(' ')
-    #print ("Objeto  Directo: "+ str(directo));
-    # ya he encontrado el OD
-    #Extraigo los sentidos
     parametros_inferidos = directo[:find]
 
 
+  elif linea.find('espec')>=0 :
+    if accion_inferida =="" :
+      ##Si la línea contiene un determinante posesivo (etiqueta DP), la acción es CONSULTAR
+      if(etimorfo.find('DP')>=0) :
+        accion_inferida="consultar"
+
+  #print("siguiente línea")
   linea=fichero.readline();
   contador_lineas=contador_lineas+1;
 
