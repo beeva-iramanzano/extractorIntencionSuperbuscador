@@ -82,7 +82,7 @@ while linea:
   #Compruebo si en la línea anterior había una negación, y en esta línea hay un participio
   #es que he detectado un adjetivo con negación
   elif flag_negacion==1 and (linea_negacion+1)==contador_lineas and (etimorfo.find('VMP')>=0) :
-    print ("Encontrado ADJETIVO, con NEGACION");
+    #print ("Encontrado ADJETIVO, con NEGACION");
     ini =linea.find('(')+1;
     fin =linea.find('-',ini,len(linea))-8;
     directo = linea[ini:fin];
