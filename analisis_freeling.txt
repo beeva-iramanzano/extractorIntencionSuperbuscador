@@ -1,0 +1,8 @@
+grup-verb/top/(realizar realizar VMN0000 00486018-v:0/01617192-v:0/01648126-v:0/02244603-v:0/02374764-v:0/02560767-v:0/02561995-v:0) [
+  VMIP1S0/dverb/(Quiero querer VMIP1S0 00698398-v:0/00709205-v:0/01188725-v:0/01775164-v:0/01825237-v:0/02236124-v:0)
+  sn/dobj/(transferencia transferencia NCFS000 00201671-n:0/00315986-n:0/01107932-n:0/05756203-n:0/06247181-n:0) [
+    espec-fs/espec/(una uno DI0FS0 -)
+  ]
+  F-term/term/(. . Fp -)
+]
+
