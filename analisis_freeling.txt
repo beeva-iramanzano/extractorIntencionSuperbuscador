@@ -1,4 +1,7 @@
-sn/top/(transferencias transferencia NCFP000 00201671-n:0/00315986-n:0/01107932-n:0/05756203-n:0/06247181-n:0) [
-  espec-fp/espec/(Mis mi DP1CPS -)
+sadv/top/(Dar_de_alta dar_de_alta RG -) [
+  sn/modnomatch/(tarjeta tarjeta NCFS000 03033986-n:0/06507941-n:0/06627006-n:0/06633205-n:0) [
+    espec-fs/espec/(una uno DI0FS0 -)
+    F-term/term/(. . Fp -)
+  ]
 ]
 
