@@ -14,6 +14,13 @@ import sys
 sys.path.append( directorio  )
 import freeling
 
+## Modify this line to be your FreeLing installation directory
+FREELINGDIR = (os.environ ['FREELING_PYTHON'] );
+DATA = FREELINGDIR+"/data";
+LANG="/es";
+freeling.util_init_locale("default")
+
+
 def palabra(linea):
   global oracion;
   #print("la palabra " + pal)
@@ -149,14 +156,7 @@ def analisis(fichero):
 ## ----------------------------------------------
 ## -------------    MAIN PROGRAM  ---------------
 ## ----------------------------------------------
-
-
-## Modify this line to be your FreeLing installation directory
-FREELINGDIR = "/usr/local";
-FREELINGDIR = "/home/ira/Desktop/myfreeling";
-DATA = FREELINGDIR+"/data";
-LANG="/es";
-freeling.util_init_locale("default");
+;
 #Semantic Database Module
 semantic = freeling.semanticDB (DATA + LANG +"/semdb.dat");
 
