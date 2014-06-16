@@ -156,7 +156,7 @@ def analisis(fichero):
 ## ----------------------------------------------
 ## -------------    MAIN PROGRAM  ---------------
 ## ----------------------------------------------
-;
+
 #Semantic Database Module
 semantic = freeling.semanticDB (DATA + LANG +"/semdb.dat");
 
