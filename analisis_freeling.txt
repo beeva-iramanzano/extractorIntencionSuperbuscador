@@ -1,7 +1,0 @@
-sadv/top/(Dar_de_alta dar_de_alta RG -) [
-  sn/modnomatch/(tarjeta tarjeta NCFS000 03033986-n:0/06507941-n:0/06627006-n:0/06633205-n:0) [
-    espec-fs/espec/(una uno DI0FS0 -)
-    F-term/term/(. . Fp -)
-  ]
-]
-
