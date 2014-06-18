@@ -23,11 +23,21 @@ def obtenersentidos(linea):
 
 def freelingsentidos(frase):
   command= "echo \"" + frase+ "\" | analyzer_client localhost:50006 "
+  #print("command " +command)
   respuesta = subprocess.check_output(command, shell=True)
+  r= str(respuesta)
   respuesta=respuesta.decode("utf-8")
-  respuesta=respuesta.split('\n')[0]
   return respuesta
 
+def freelingsentidosFrase(frase):
+  command= "echo \"" + frase+ "\" | analyzer_client localhost:50006 "
+  #print("command " +command)
+  respuesta = subprocess.check_output(command, shell=True)
+  r= str(respuesta)
+  respuesta=respuesta.decode("utf-8")
+  respuesta=respuesta.split('\n')
+  respuesta=respuesta[3]
+  return respuesta
 
 
 DATA = directoriofreeling +"/data";
@@ -53,7 +63,8 @@ acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modific
 fichero = open('../extractorIntencionSuperbuscador/fich.csv')
 
 entrada=fichero.readline();
-#print (" entrada " +entrada)
+entrada=entrada.replace(' ','')
+print (" entrada " +entrada)
 intencion= entrada.split("|");
 #Leo el fichero
 while entrada:
@@ -65,8 +76,7 @@ while entrada:
   accion= intencion[0].lower().replace(' ','')
   #print("accion " +accion)
   if(accion!=""):
-    respuesta=freelingsentidos("Yo voy a " +accion + ".")
-    respuesta=respuesta[3]
+    respuesta=freelingsentidosFrase("Yo voy a " +accion + ".")
     sentidosaccion=obtenersentidos(respuesta)
     sentidosproducto=""
     producto_inferido=""

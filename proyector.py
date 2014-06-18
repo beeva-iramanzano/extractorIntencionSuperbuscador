@@ -9,7 +9,7 @@ import subprocess
 import simplejson as json
 
 def obtenersentidos(linea):
-  #print ("respuesta: "+ respuesta);
+  #print ("linea: "+ linea);
   inisen =respuesta.find('-')-8;
   if( respuesta.find(':') >=0):
     finsen =respuesta.find(')')-1 ;
@@ -23,12 +23,21 @@ def obtenersentidos(linea):
 
 def freelingsentidos(frase):
   command= "echo \"" + frase+ "\" | analyzer_client localhost:50006 "
+  #print("command " +command)
   respuesta = subprocess.check_output(command, shell=True)
   r= str(respuesta)
   respuesta=respuesta.decode("utf-8")
-  respuesta=respuesta.split('\n')[0]
   return respuesta
 
+def freelingsentidosFrase(frase):
+  command= "echo \"" + frase+ "\" | analyzer_client localhost:50006 "
+  #print("command " +command)
+  respuesta = subprocess.check_output(command, shell=True)
+  r= str(respuesta)
+  respuesta=respuesta.decode("utf-8")
+  respuesta=respuesta.split('\n')
+  respuesta=respuesta[3]
+  return respuesta
 
 
 DATA = directoriofreeling +"/data";
@@ -49,7 +58,7 @@ acciones_transferencia= ['transferir','transportar','trasladar','transferir','tr
 
 
 productos=['movimiento','agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'claves', 'alertas y notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósitos', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonarios', 'extacto mensual', 'cajero/oficina', 'remesas', 'otros dispositivos', 'cuentas', 'transferencias', 'recibos / adeudos', 'carteras', 'traspasos', 'fondo de inversión', 'reembolso', 'seguros', 'recibos no domiciliado', 'transferencias/traspasos', 'comisiones', 'valores', 'cheques', 'traspasos a tarjeta', 'europlazo', 'movimientos', 'tarjeta', 'divisas', 'préstamos', 'efectivo móvil', 'fondos de inversión / planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
-acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modificar', 'seguros', 'cliente', 'opv', 'asesoramiento', 'extracto mensual', 'operaciones', 'seguridad', 'depósitos', 'planes', 'simular', 'consulta','consulta', 'realizar', 'cuentas', 'tarjetas', 'fondos', 'consulta de mercado', 'operar', 'gestionar', 'alertas', 'transferencias', 'área_personal', 'valores', 'contratar']
+acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modificar', 'seguros', 'cliente', 'opv', 'asesoramiento', 'extracto mensual', 'operaciones', 'seguridad', 'depósitos', 'planes', 'simular', 'consulta','consulta', 'realizar', 'cuentas', 'tarjetas', 'fondos', 'consulta de mercado', 'operar', 'gestionar', 'alertas', 'transferencias', 'área_personal', 'valores', 'contratar','consultar']
 
 sentidosaccion=""
 sentidosproducto=""
@@ -65,14 +74,11 @@ intencion= entrada.split("|");
 
 # ANALIZO LA ACCION DE LA INTENCIÓN
 accion= intencion[0].lower()
-respuesta=freelingsentidos("Yo voy a " +accion + ".")
-respuesta=respuesta[3]
-
-#print (command)
-#print (respuesta)
+respuesta=freelingsentidosFrase("Yo voy a " +accion + ".")
+#print(respuesta)
 
 #print ("sentidosaccion: "+ sentidosaccion);
-sentidosaccion=sentidosaccion.split(':0/')
+sentidosaccion=""
 sentidosproducto=""
 producto_inferido=""
 accion_inferida=""
@@ -118,7 +124,7 @@ while accion_inferida=="" and contsen<len(sentidosaccion):
 
 # ANALIZO EL PRODUCTO DE LA INTENCIÓN
 producto= intencion[1].lower()
-
+print ("producto " + producto)
 #Compruebo si es plural
 respuesta=freelingsentidos(producto + ".")
 #print("respuestas " +respuesta)
@@ -147,14 +153,16 @@ while producto_inferido=="" and contsen<len(sentidosproducto):
   #Miro con cual de las acciones se corresponde la accion extraida
   #Comparo todas las acciones con todos los sinonimos
   contsin=0;
+  #print ("len " + str(len(sinos)) )flinea
   while producto_inferido=="" and contsin<len(sinos):
     #print("cont" +str(contsin))
     sino=sinos[contsin]
+    contsin=contsin+1
     for a in productos:
       if a==sino:
         producto_inferido=a
         #print ("Producto inferido: " + producto_inferido)
-    contsin=contsin+1
+  contsen=contsen+1
 #Extraigo los parámetros, pero no hago nada con ellos
 parametros=intencion[2].lower().replace(' ' ,'')
 
