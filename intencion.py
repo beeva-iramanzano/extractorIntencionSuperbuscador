@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#/usr/bin/python3
 
 ### REQUIRES python 3 !!!!
 
@@ -40,9 +40,12 @@ def resultado():
   global producto_inferido_aux
   global parametros_inferidos_aux
   global oracion
+  global ejecutada_segunda
 
   ## Si no he encontrado acción, prueba ha inlcuir "Quiero" en la oración y vuelvo a analizar
-  if(accion_inferida==""):
+  if(accion_inferida=="") and (ejecutada_segunda==0):
+    #print("Entro por aux")
+    ejecutada_segunda=1
     accion_inferida_aux=accion_inferida
     producto_inferido_aux=producto_inferido
     parametros_inferidos_aux=parametros_inferidos
@@ -51,10 +54,11 @@ def resultado():
     parametros_inferidos=""
     oracion = "Quiero " + oracion.lower()
     #print(oracion)
-    os.system("echo \"" + oracion + "\" | analyzer_client localhost:50005 > aux.txt")
+    os.system("echo \"" + oracion + "\" | analyzer_client localhost:50005 > ../extractorIntencionSuperbuscador/aux.txt")
     ficheroaux = open('../extractorIntencionSuperbuscador/aux.txt')
     analisis(ficheroaux)
   else:
+    #print("entro en final")
     ## Cuando tengo acción compruebo si la acción es "Quiero"
     ## Si es quiero, me quedo con el resultado del análisis sin incluir "Quiero"
     if( accion_inferida== "Quiero"):
@@ -62,7 +66,7 @@ def resultado():
       producto_inferido=producto_inferido_aux
       parametros_inferidos=parametros_inferidos_aux
     #print ("Accion : " + accion_inferida.upper() +" | " + "Producto : " + producto_inferido.upper() + " | Parametro : " + parametros_inferidos.upper())
-    print ( accion_inferida.upper() +" | " + producto_inferido.upper() + " | " + parametros_inferidos.upper())  
+    print ( accion_inferida.upper() +"|" + producto_inferido.upper() + "|" + parametros_inferidos.upper())  
     accion_inferida =""
     producto_inferido=""
     parametros_inferidos=""
@@ -88,6 +92,7 @@ def sintagmanominal(fichero):
       fin_objdirec = 1;
     elif linea.find('F-term')>=0:
       fin_oracion = 1;
+      #print("ejecuto res")
       resultado()
     elif linea.find('adj-mod')>=0:
       #print (" PAL: " + pal)
@@ -143,6 +148,7 @@ def analisis(fichero):
       sintagmanominal(fichero);
 
     elif linea.find('F-term')>=0 :
+      #print("ejecuto res 2")
       resultado()
 
     fin_oracion=0;
@@ -172,6 +178,9 @@ global parametros_inferidos
 global accion_inferida_aux
 global producto_inferido_aux
 global parametros_inferidos_aux
+global ejecutada_segunda
+
+ejecutada_segunda=0
 
 fichero = open('../extractorIntencionSuperbuscador/analisis_freeling.txt')
 analisis(fichero)

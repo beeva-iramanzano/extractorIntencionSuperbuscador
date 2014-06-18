@@ -40,7 +40,8 @@ r= str(respuesta)
 respuesta=respuesta.decode("utf-8")
 respuesta=respuesta.split('\n')
 respuesta=respuesta[3]
-
+#print (command)
+#print (respuesta)
 inisen =respuesta.find('-')-8;
 finsen =respuesta.find(')')-1
 sentidosaccion = respuesta[inisen:finsen];
@@ -154,5 +155,5 @@ while producto_inferido=="" and contsen<len(sentidosproducto):
 parametros=intencion[2].lower().replace(' ' ,'')
 
 
-resultado = json.dumps({"accions" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
+resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
 print (resultado)
