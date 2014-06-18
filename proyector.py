@@ -59,7 +59,7 @@ accion_inferida=""
 
 #Recupero el parámetro de entrada
 entrada = sys.argv[1]
-print (" entrada " +entrada)
+#print (" entrada " +entrada)
 intencion= entrada.split("|");
 
 
@@ -121,7 +121,7 @@ producto= intencion[1].lower()
 
 #Compruebo si es plural
 respuesta=freelingsentidos(producto + ".")
-print("respuestas " +respuesta)
+#print("respuestas " +respuesta)
 if(respuesta.find('NCFP000')>=0):
   #print("entro " +producto[:len(producto)-2] )
   respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
@@ -131,14 +131,13 @@ if(respuesta.find('NCFP000')>=0):
     sentidosproducto=obtenersentidos(respuesta)
     #print ("respuesta: "+ respuesta)
 else:
-  print("AUI" )
   sentidosproducto=obtenersentidos(respuesta)
 
 
 contsen=0
 while producto_inferido=="" and contsen<len(sentidosproducto):
   sen  = sentidosproducto[contsen]
-  print ("Sentido: "+ sen)
+  #print ("Sentido: "+ sen)
   #Obtengo la info del sentido
   senseinfo = semantic.get_sense_info (sen)
   #Obtengo los SINONIMOS
@@ -149,7 +148,7 @@ while producto_inferido=="" and contsen<len(sentidosproducto):
   #Comparo todas las acciones con todos los sinonimos
   contsin=0;
   while producto_inferido=="" and contsin<len(sinos):
-    print("cont" +str(contsin))
+    #print("cont" +str(contsin))
     sino=sinos[contsin]
     for a in productos:
       if a==sino:
