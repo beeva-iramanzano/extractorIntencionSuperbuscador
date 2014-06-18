@@ -8,6 +8,28 @@ import freeling
 import subprocess
 import simplejson as json
 
+def obtenersentidos(linea):
+  #print ("respuesta: "+ respuesta);
+  inisen =respuesta.find('-')-8;
+  if( respuesta.find(')') >=0):
+    finsen =respuesta.find(')')-1 ;
+    sentidos = respuesta[inisen:finsen];
+    #print ("sentidosproducto: "+ sentidosproducto);
+    sentidos=sentidos.split(':0/');
+  else:
+    sentidos=""
+
+  return sentidos
+
+def freelingsentidos(frase):
+  command= "echo \"" + frase+ "\" | analyzer_client localhost:50006 "
+  respuesta = subprocess.check_output(command, shell=True)
+  r= str(respuesta)
+  respuesta=respuesta.decode("utf-8")
+  respuesta=respuesta.split('\n')[0]
+  return respuesta
+
+
 
 DATA = directoriofreeling +"/data";
 LANG="/es";
@@ -32,28 +54,24 @@ acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modific
 fichero = open('../extractorIntencionSuperbuscador/fich.csv')
 
 entrada=fichero.readline();
-print (" entrada " +entrada)
+#print (" entrada " +entrada)
 intencion= entrada.split("|");
 #Leo el fichero
 while entrada:
+sentidosaccion=""
+sentidosproducto=""
+producto_inferido=""
+accion_inferida=""
 # ANALIZO LA ACCION DE LA INTENCIÓN
   accion= intencion[0].lower()
   #print("accion " +accion)
-  command= "echo \"" + "Yo voy a " +accion + "." + "\" | analyzer_client localhost:50006 "
-  respuesta = subprocess.check_output(command, shell=True)
-  r= str(respuesta)
-  respuesta=respuesta.decode("utf-8")
-  respuesta=respuesta.split('\n')
-  respuesta=respuesta[3]
-
-  inisen =respuesta.find('-')-8;
-  finsen =respuesta.find(')')-1
-  sentidosaccion = respuesta[inisen:finsen];
-  #print ("sentidosaccion: "+ sentidosaccion);
-  sentidosaccion=sentidosaccion.split(':0/')
-  sentidosproducto=""
-  producto_inferido=""
-  accion_inferida=""
+  if(accion!=""):
+    respuesta=freelingsentidos("Yo voy a " +accion + ".")
+    respuesta=respuesta[3]
+    sentidosaccion=obtenersentidos(respuesta)
+    sentidosproducto=""
+    producto_inferido=""
+    accion_inferida=""
 
   contsen=0
   while accion_inferida=="" and contsen<len(sentidosaccion):
@@ -63,8 +81,6 @@ while entrada:
     senseinfo = semantic.get_sense_info (sen)
     #Obtengo los SINONIMOS
     sinos= senseinfo.words;
-    #for sino in sinos:
-    #print ("  sinonimo: " + sino)
     #Miro con cual de las acciones se corresponde la accion extraida
     #Comparo todas las acciones con todos los sinonimos
     contsin=0;
@@ -92,51 +108,22 @@ while entrada:
 
   # ANALIZO EL PRODUCTO DE LA INTENCIÓN
   producto= intencion[1].lower()
-  print("producto " +producto)
+  #print("producto " +producto)
   #Compruebo si es plural
-  command= "echo \"" + producto + "." + "\" | analyzer_client localhost:50006 "
-  respuesta = subprocess.check_output(command, shell=True)
-  respuesta=respuesta.decode("utf-8")
-  respuesta=respuesta.split('\n')[0]
-  print("respuestas " +respuesta)
+  respuesta=freelingsentidos(producto + ".")
+  #print("respuestas " +respuesta)
   if(respuesta.find('NCFP000')>=0):
     #print("entro " +producto[:len(producto)-2] )
-    command= "echo \"" + producto[:len(producto)-2] + "." + "\" | analyzer_client localhost:50006 "
-    respuesta = subprocess.check_output(command, shell=True)
-    respuesta=respuesta.decode("utf-8")
-    respuesta=respuesta.split('\n')[0]
-    print ("respuesta: "+ respuesta);
-    inisen =respuesta.find('-')-8;
-    finsen =respuesta.find(')')-1 ;
-    sentidosproducto = respuesta[inisen:finsen];
-    #print ("sentidosproducto: "+ sentidosproducto);
-    sentidosproducto=sentidosproducto.split(':0/');
+    respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+    sentidosproducto=obtenersentidos(respuesta)
     if(sentidosproducto==""):
-      command= "echo \"" + producto[:len(producto)-3] + "." + "\" | analyzer_client localhost:50006 "
-      respuesta = subprocess.check_output(command, shell=True)
-      r= str(respuesta)
-      respuesta=respuesta.decode("utf-8")
-      #print ("respuesta: "+ respuesta);
-      inisen =respuesta.find('-')-8;
-      finsen =respuesta.find(')')-1 ;
-      sentidosproducto = respuesta[inisen:finsen];
-      #print ("sentidosproducto: "+ sentidosproducto);
-      sentidosproducto=sentidosproducto.split(':0/');
+      respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
+      sentidosproducto=obtenersentidos(respuesta)
   else:
-    command= "echo \"" + producto + "." + "\" | analyzer_client localhost:50006 "
-    respuesta = subprocess.check_output(command, shell=True)
-    r= str(respuesta)
-    respuesta=respuesta.decode("utf-8")
-    #print ("respuesta: "+ respuesta);
-    inisen =respuesta.find('-')-8;
-    finsen =respuesta.find(')')-1 ;
-    sentidosproducto = respuesta[inisen:finsen];
-    #print ("sentidosproducto: "+ sentidosproducto);
-    sentidosproducto=sentidosproducto.split(':0/');
-
+    sentidosproducto=obtenersentidos(respuesta)
 
   contsen=0 
-  while producto_inferido=="" and contsen<len(sentidosproducto):
+  while producto_inferido=="" and contsen<len(sentidosproducto) and sentidosproducto=="":
     sen  = sentidosproducto[contsen]
     #print ("Sentido: "+ sen)
     #Obtengo la info del sentido
@@ -157,14 +144,14 @@ while entrada:
 
   #Extraigo los parámetros, pero no hago nada con ellos
   parametros=intencion[2].lower().replace(' ' ,'')
-  print("parametros " +parametros)
+  #print("parametros " +parametros)
 
   resultado = json.dumps({"accions" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
   print (resultado)
 
 
   entrada=fichero.readline();
-  print (" entrada " +entrada)
+  #print (" entrada " +entrada)
   intencion= entrada.split("|");
 
 fichero.close()
