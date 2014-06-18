@@ -58,11 +58,11 @@ entrada=fichero.readline();
 intencion= entrada.split("|");
 #Leo el fichero
 while entrada:
-sentidosaccion=""
-sentidosproducto=""
-producto_inferido=""
-accion_inferida=""
-# ANALIZO LA ACCION DE LA INTENCIÓN
+  sentidosaccion=""
+  sentidosproducto=""
+  producto_inferido=""
+  accion_inferida=""
+  # ANALIZO LA ACCION DE LA INTENCIÓN
   accion= intencion[0].lower()
   #print("accion " +accion)
   if(accion!=""):
