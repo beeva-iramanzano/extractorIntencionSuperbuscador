@@ -24,7 +24,6 @@ def obtenersentidos(linea):
 def freelingsentidos(frase):
   command= "echo \"" + frase+ "\" | analyzer_client localhost:50006 "
   respuesta = subprocess.check_output(command, shell=True)
-  r= str(respuesta)
   respuesta=respuesta.decode("utf-8")
   respuesta=respuesta.split('\n')[0]
   return respuesta
