@@ -11,7 +11,7 @@ import simplejson as json
 def obtenersentidos(linea):
   #print ("respuesta: "+ respuesta);
   inisen =respuesta.find('-')-8;
-  if( respuesta.find(')') >=0):
+  if( respuesta.find(':') >=0):
     finsen =respuesta.find(')')-1 ;
     sentidos = respuesta[inisen:finsen];
     #print ("sentidosproducto: "+ sentidosproducto);
@@ -140,7 +140,7 @@ while entrada:
         if a==sino:
           producto_inferido=a
           #print ("Producto inferido: " + producto_inferido)
-
+    contsin=contsin+1
   #Extraigo los parámetros, pero no hago nada con ellos
   parametros=intencion[2].lower().replace(' ' ,'')
   #print("parametros " +parametros)
