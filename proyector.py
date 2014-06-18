@@ -8,6 +8,28 @@ import freeling
 import subprocess
 import simplejson as json
 
+def obtenersentidos(linea):
+  #print ("respuesta: "+ respuesta);
+  inisen =respuesta.find('-')-8;
+  if( respuesta.find(')') >=0):
+    finsen =respuesta.find(')')-1 ;
+    sentidos = respuesta[inisen:finsen];
+    #print ("sentidosproducto: "+ sentidosproducto);
+    sentidos=sentidos.split(':0/');
+  else:
+    sentidos=""
+
+  return sentidos
+
+def freelingsentidos(frase):
+  command= "echo \"" + frase+ "\" | analyzer_client localhost:50006 "
+  respuesta = subprocess.check_output(command, shell=True)
+  r= str(respuesta)
+  respuesta=respuesta.decode("utf-8")
+  respuesta=respuesta.split('\n')[0]
+  return respuesta
+
+
 
 DATA = directoriofreeling +"/data";
 LANG="/es";
@@ -26,8 +48,13 @@ productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'co
 acciones_transferencia= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 
 
-productos=['agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'claves', 'alertas y notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósitos', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonarios', 'extacto mensual', 'cajero/oficina', 'remesas', 'otros dispositivos', 'cuentas', 'transferencias', 'recibos / adeudos', 'carteras', 'traspasos', 'fondo de inversión', 'reembolso', 'seguros', 'recibos no domiciliado', 'transferencias/traspasos', 'comisiones', 'valores', 'cheques', 'traspasos a tarjeta', 'europlazo', 'movimientos', 'tarjeta', 'divisas', 'préstamos', 'efectivo móvil', 'fondos de inversión / planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
+productos=['movimiento','agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'claves', 'alertas y notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósitos', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonarios', 'extacto mensual', 'cajero/oficina', 'remesas', 'otros dispositivos', 'cuentas', 'transferencias', 'recibos / adeudos', 'carteras', 'traspasos', 'fondo de inversión', 'reembolso', 'seguros', 'recibos no domiciliado', 'transferencias/traspasos', 'comisiones', 'valores', 'cheques', 'traspasos a tarjeta', 'europlazo', 'movimientos', 'tarjeta', 'divisas', 'préstamos', 'efectivo móvil', 'fondos de inversión / planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
 acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modificar', 'seguros', 'cliente', 'opv', 'asesoramiento', 'extracto mensual', 'operaciones', 'seguridad', 'depósitos', 'planes', 'simular', 'consulta','consulta', 'realizar', 'cuentas', 'tarjetas', 'fondos', 'consulta de mercado', 'operar', 'gestionar', 'alertas', 'transferencias', 'área_personal', 'valores', 'contratar']
+
+sentidosaccion=""
+sentidosproducto=""
+producto_inferido=""
+accion_inferida=""
 
 
 #Recupero el parámetro de entrada
@@ -38,21 +65,10 @@ intencion= entrada.split("|");
 
 # ANALIZO LA ACCION DE LA INTENCIÓN
 accion= intencion[0].lower()
-command= "echo \"" + "Yo voy a " +accion + "." + "\" | analyzer_client localhost:50006 "
-respuesta = subprocess.check_output(command, shell=True)
-r= str(respuesta)
-respuesta=respuesta.decode("utf-8")
-respuesta=respuesta.split('\n')
+respuesta=freelingsentidos("Yo voy a " +accion + ".")
 respuesta=respuesta[3]
+sentidosaccion=obtenersentidos(respuesta)
 
-inisen =respuesta.find('-')-8;
-finsen =respuesta.find(')')-1
-sentidosaccion = respuesta[inisen:finsen];
-#print ("sentidosaccion: "+ sentidosaccion);
-sentidosaccion=sentidosaccion.split(':0/')
-sentidosproducto=""
-producto_inferido=""
-accion_inferida=""
 
 contsen=0
 while accion_inferida=="" and contsen<len(sentidosaccion):
@@ -93,45 +109,18 @@ while accion_inferida=="" and contsen<len(sentidosaccion):
 producto= intencion[1].lower()
 
 #Compruebo si es plural
-command= "echo \"" + producto + "." + "\" | analyzer_client localhost:50006 "
-respuesta = subprocess.check_output(command, shell=True)
-respuesta=respuesta.decode("utf-8")
-respuesta=respuesta.split('\n')[0]
+respuesta=freelingsentidos(producto + ".")
 #print("respuestas " +respuesta)
 if(respuesta.find('NCFP000')>=0):
   #print("entro " +producto[:len(producto)-2] )
-  command= "echo \"" + producto[:len(producto)-2] + "." + "\" | analyzer_client localhost:50006 "
-  respuesta = subprocess.check_output(command, shell=True)
-  respuesta=respuesta.decode("utf-8")
-  respuesta=respuesta.split('\n')[0]
-  #print ("respuesta: "+ respuesta);
-  inisen =respuesta.find('-')-8;
-  finsen =respuesta.find(')')-1 ;
-  sentidosproducto = respuesta[inisen:finsen];
-  #print ("sentidosproducto: "+ sentidosproducto);
-  sentidosproducto=sentidosproducto.split(':0/');
+  respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+  sentidosproducto=obtenersentidos(respuesta)
   if(sentidosproducto==""):
-    command= "echo \"" + producto[:len(producto)-3] + "." + "\" | analyzer_client localhost:50006 "
-    respuesta = subprocess.check_output(command, shell=True)
-    r= str(respuesta)
-    respuesta=respuesta.decode("utf-8")
-    #print ("respuesta: "+ respuesta);
-    inisen =respuesta.find('-')-8;
-    finsen =respuesta.find(')')-1 ;
-    sentidosproducto = respuesta[inisen:finsen];
-    #print ("sentidosproducto: "+ sentidosproducto);
-    sentidosproducto=sentidosproducto.split(':0/');
+    respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
+    sentidosproducto=obtenersentidos(respuesta)
+    #print ("respuesta: "+ respuesta)
 else:
-  command= "echo \"" + producto + "." + "\" | analyzer_client localhost:50006 "
-  respuesta = subprocess.check_output(command, shell=True)
-  r= str(respuesta)
-  respuesta=respuesta.decode("utf-8")
-  #print ("respuesta: "+ respuesta);
-  inisen =respuesta.find('-')-8;
-  finsen =respuesta.find(')')-1 ;
-  sentidosproducto = respuesta[inisen:finsen];
-  #print ("sentidosproducto: "+ sentidosproducto);
-  sentidosproducto=sentidosproducto.split(':0/');
+  sentidosproducto=obtenersentidos(respuesta)
 
 
 contsen=0
