@@ -62,7 +62,7 @@ while entrada:
   producto_inferido=""
   accion_inferida=""
   # ANALIZO LA ACCION DE LA INTENCIÓN
-  accion= intencion[0].lower()
+  accion= intencion[0].lower().recplace(' ','')
   #print("accion " +accion)
   if(accion!=""):
     respuesta=freelingsentidos("Yo voy a " +accion + ".")
@@ -106,7 +106,7 @@ while entrada:
 
 
   # ANALIZO EL PRODUCTO DE LA INTENCIÓN
-  producto= intencion[1].lower()
+  producto= intencion[1].lower().recplace(' ','')
   #print("producto " +producto)
   #Compruebo si es plural
   respuesta=freelingsentidos(producto + ".")
