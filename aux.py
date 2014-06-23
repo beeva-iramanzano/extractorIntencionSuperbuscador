@@ -63,23 +63,22 @@ acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modific
 fichero = open('../extractorIntencionSuperbuscador/fich.csv')
 
 entrada=fichero.readline();
-entrada=entrada.replace(' ','')
-#print (" entrada " +entrada)
+entrada=entrada.replace('\n','')
+
 intencion= entrada.split("|");
 #Leo el fichero
 while entrada:
+  #print (" entrada " +entrada)
   sentidosaccion=""
   sentidosproducto=""
   producto_inferido=""
   accion_inferida=""
 
-  #Recupero el parámetro de entrada
-  #print (" entrada " +entrada)
 
   # ANALIZO LA ACCION DE LA INTENCIÓN
   accion= intencion[0].lower().replace(' ','');
   respuesta=freelingsentidosFrase("Yo voy a " +accion + ".")
-  #print(respuesta)
+  #print(accion +"|")
 
   #print ("sentidosaccion: "+ sentidosaccion);
   sentidosaccion=""
@@ -125,7 +124,7 @@ while entrada:
 
 
   # ANALIZO EL PRODUCTO DE LA INTENCIÓN
-  producto= intencion[1].lower()
+  producto= intencion[1].lower().replace(' ','')
   #print ("producto " + producto)
   #Compruebo si es plural
   respuesta=freelingsentidos(producto + ".")
