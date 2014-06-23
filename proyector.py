@@ -164,7 +164,7 @@ while producto_inferido=="" and contsen<len(sentidosproducto):
         #print ("Producto inferido: " + producto_inferido)
   contsen=contsen+1
 #Extraigo los parámetros, pero no hago nada con ellos
-parametros=intencion[2].lower().replace(' ' ,'')
+parametros=intencion[2].lower()
 
 
 resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
