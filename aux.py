@@ -60,7 +60,7 @@ acciones_transferencia= ['transferir','transportar','trasladar','transferir','tr
 productos=['movimiento','agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'claves', 'alertas y notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósitos', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonarios', 'extacto mensual', 'cajero/oficina', 'remesas', 'otros dispositivos', 'cuentas', 'transferencia', 'recibos / adeudos', 'carteras', 'fondo de inversión', 'reembolso', 'seguros', 'recibos no domiciliado', 'comisiones', 'valores', 'cheques', 'traspasos a tarjeta', 'europlazo', 'movimientos', 'tarjeta', 'divisas', 'préstamos', 'efectivo móvil', 'fondos de inversión / planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
 acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modificar', 'seguros', 'cliente', 'opv', 'asesoramiento', 'extracto mensual', 'operaciones', 'seguridad', 'depósitos', 'planes', 'simular', 'consulta','consulta', 'realizar', 'cuentas', 'tarjetas', 'fondos', 'consulta de mercado', 'operar', 'gestionar', 'alertas', 'transferencias', 'área_personal', 'valores', 'contratar','consultar']
 
-fichero = open('../extractorIntencionSuperbuscador/fich.csv')
+fichero = open('../extractorIntencionSuperbuscador/aux.csv')
 
 entrada=fichero.readline();
 entrada=entrada.replace('\n','')
@@ -68,7 +68,7 @@ entrada=entrada.replace('\n','')
 intencion= entrada.split("|");
 #Leo el fichero
 while entrada:
-  print (" entrada " +entrada)
+  #print (" entrada " +entrada)
   sentidosaccion=""
   sentidosproducto=""
   producto_inferido=""
@@ -76,7 +76,7 @@ while entrada:
 
 
   # ANALIZO LA ACCION DE LA INTENCIÓN
-  accion= intencion[0].lower().replace(' ','');
+  accion= intencion[0].lower().replace(' ','').replace('\n','');
   respuesta=freelingsentidosFrase("Yo voy a " +accion + ".")
   #print(accion +"|")
 
@@ -124,7 +124,7 @@ while entrada:
 
 
   # ANALIZO EL PRODUCTO DE LA INTENCIÓN
-  producto= intencion[1].lower().replace(' ','')
+  producto= intencion[1].lower().replace(' ','').replace('\n','')
   #print ("producto " + producto)
   #Compruebo si es plural
   respuesta=freelingsentidos(producto + ".")
@@ -165,8 +165,7 @@ while entrada:
           #print ("Producto inferido: " + producto_inferido)
     contsen=contsen+1
   #Extraigo los parámetros, pero no hago nada con ellos
-  parametros=intencion[2].lower().replace(' ' ,'')
-
+  parametros=intencion[2].lower().replace(' ' ,'').replace('\n','')
 
   resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
   print (resultado)
