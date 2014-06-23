@@ -76,7 +76,7 @@ while entrada:
 
 
   # ANALIZO LA ACCION DE LA INTENCIÓN
-  accion= intencion[0].lower().replace(' ','').replace('\n','');
+  accion= intencion[0].lower().replace('\n','');
   respuesta=freelingsentidosFrase("Yo voy a " +accion + ".")
   #print(accion +"|")
 
@@ -124,17 +124,17 @@ while entrada:
 
 
   # ANALIZO EL PRODUCTO DE LA INTENCIÓN
-  producto= intencion[1].lower().replace(' ','').replace('\n','')
+  producto= intencion[1].lower().replace('\n','')
   #print ("producto " + producto)
   #Compruebo si es plural
   respuesta=freelingsentidos(producto + ".")
   #print("respuestas " +respuesta)
   if(respuesta.find('NCFP000')>=0):
     #print("entro " +producto[:len(producto)-2] )
-    respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+    respuesta=freelingsentidos( producto[:len(producto)-1] + "." )
     sentidosproducto=obtenersentidos(respuesta)
     if(sentidosproducto==""):
-      respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
+      respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
       sentidosproducto=obtenersentidos(respuesta)
       #print ("respuesta: "+ respuesta)
   else:
@@ -165,7 +165,7 @@ while entrada:
           #print ("Producto inferido: " + producto_inferido)
     contsen=contsen+1
   #Extraigo los parámetros, pero no hago nada con ellos
-  parametros=intencion[2].lower().replace(' ' ,'').replace('\n','')
+  parametros=intencion[2].lower().replace('\n','')
 
   resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
   print (resultado)
