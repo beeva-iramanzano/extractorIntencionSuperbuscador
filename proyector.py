@@ -27,6 +27,8 @@ def freelingsentidos(frase):
   respuesta = subprocess.check_output(command, shell=True)
   r= str(respuesta)
   respuesta=respuesta.decode("utf-8")
+  respuesta=respuesta.split('\n')
+  respuesta=respuesta[0]
   return respuesta
 
 def freelingsentidosFrase(frase):
@@ -57,7 +59,7 @@ productos_sinonimos = ['transferencia', 'tarjeta', 'movimiento' , 'recibo' , 'co
 acciones_transferencia= ['transferir','transportar','trasladar','transferir','transportar','trasladar','transferir','transferir','pasar','transferir','pasar','transferir','transmitir','transferir','transmitir','entregar','presentar','transferir','traspasar','transferir'];
 
 
-productos=['movimiento','agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'claves', 'alertas y notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósitos', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonarios', 'extacto mensual', 'cajero/oficina', 'remesas', 'otros dispositivos', 'cuentas', 'transferencias', 'recibos / adeudos', 'carteras', 'traspasos', 'fondo de inversión', 'reembolso', 'seguros', 'recibos no domiciliado', 'transferencias/traspasos', 'comisiones', 'valores', 'cheques', 'traspasos a tarjeta', 'europlazo', 'movimientos', 'tarjeta', 'divisas', 'préstamos', 'efectivo móvil', 'fondos de inversión / planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
+productos=['movimiento','agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'claves', 'alertas y notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósitos', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonarios', 'extacto mensual', 'cajero/oficina', 'remesas', 'otros dispositivos', 'cuentas', 'transferencia', 'recibos / adeudos', 'carteras', 'traspasos', 'fondo de inversión', 'reembolso', 'seguros', 'recibos no domiciliado', 'ttraspasos', 'comisiones', 'valores', 'cheques', 'traspasos a tarjeta', 'europlazo', 'movimientos', 'tarjeta', 'divisas', 'préstamos', 'efectivo móvil', 'fondos de inversión / planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
 acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modificar', 'seguros', 'cliente', 'opv', 'asesoramiento', 'extracto mensual', 'operaciones', 'seguridad', 'depósitos', 'planes', 'simular', 'consulta','consulta', 'realizar', 'cuentas', 'tarjetas', 'fondos', 'consulta de mercado', 'operar', 'gestionar', 'alertas', 'transferencias', 'área_personal', 'valores', 'contratar','consultar']
 
 sentidosaccion=""
@@ -105,7 +107,7 @@ while accion_inferida=="" and contsen<len(sentidosaccion):
     for a in acciones:
       if a==sino:
         accion_inferida=a
-        #print ("Accion inferida: " +accion_inferida)
+       #print ("Accion inferida: " +accion_inferida)
 
     #Si no he encontrado una accion asociada, busco en las acciones sinonimos de transferencias
     contactra=0
@@ -124,26 +126,26 @@ while accion_inferida=="" and contsen<len(sentidosaccion):
 
 # ANALIZO EL PRODUCTO DE LA INTENCIÓN
 producto= intencion[1].lower()
-print ("producto " + producto)
+#print ("producto " + producto)
 #Compruebo si es plural
 respuesta=freelingsentidos(producto + ".")
-#print("respuestas " +respuesta)
+#print("respuestas producto " +respuesta)
 if(respuesta.find('NCFP000')>=0):
-  #print("entro " +producto[:len(producto)-2] )
-  respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+  #print("entro " +producto[:len(producto)-1] )
+  respuesta=freelingsentidos( producto[:len(producto)-1] + "." )
   sentidosproducto=obtenersentidos(respuesta)
   if(sentidosproducto==""):
-    respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
+    respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
     sentidosproducto=obtenersentidos(respuesta)
-    #print ("respuesta: "+ respuesta)
+    #print ("respuesta de singular: "+ respuesta)
 else:
   sentidosproducto=obtenersentidos(respuesta)
-
+#print("ANTES DE WHILE " +str(len(sentidosproducto))+" | "+ producto_inferido)
 
 contsen=0
 while producto_inferido=="" and contsen<len(sentidosproducto):
   sen  = sentidosproducto[contsen]
-  #print ("Sentido: "+ sen)
+  #print ("Sentido producto: "+ sen)
   #Obtengo la info del sentido
   senseinfo = semantic.get_sense_info (sen)
   #Obtengo los SINONIMOS
@@ -159,6 +161,7 @@ while producto_inferido=="" and contsen<len(sentidosproducto):
     sino=sinos[contsin]
     contsin=contsin+1
     for a in productos:
+      #print("producto comp. " + a +"|"+ sino )
       if a==sino:
         producto_inferido=a
         #print ("Producto inferido: " + producto_inferido)
