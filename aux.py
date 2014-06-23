@@ -125,10 +125,10 @@ while entrada:
   #print("respuestas " +respuesta)
   if(respuesta.find('NCFP000')>=0):
     #print("entro " +producto[:len(producto)-2] )
-    respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+    respuesta=freelingsentidos( producto[:len(producto)-1] + "." )
     sentidosproducto=obtenersentidos(respuesta)
     if(sentidosproducto==""):
-      respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
+      respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
       sentidosproducto=obtenersentidos(respuesta)
       #print ("respuesta: "+ respuesta)
   else:
