@@ -59,7 +59,7 @@ def resultado():
     #print("entro en final")
     ## Cuando tengo acción compruebo si la acción es "Quiero"
     ## Si es quiero, me quedo con el resultado del análisis sin incluir "Quiero"
-    if( accion_inferida== "Quiero"):
+    if( accion_inferida== "Quiero") or ( producto_inferido== "Quiero"):
       accion_inferida=accion_inferida_aux
       producto_inferido=producto_inferido_aux
       parametros_inferidos=parametros_inferidos_aux

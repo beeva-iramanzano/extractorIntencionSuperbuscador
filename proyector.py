@@ -10,6 +10,21 @@ import freeling
 import subprocess
 import simplejson as json
 
+
+def  devuelvo_probabilidades():
+  global producto_inferido
+  global parametros
+  c=0
+  resultado=[]
+  for t in conjunto_acciones_transferencia:
+    proba= str(t[1])
+    accion= str(t[0])
+    res = json.dumps({"probabilidad": proba ,"accion" : accion, "producto": producto_inferido, "parametro": parametros}, ensure_ascii=False, encoding='utf8')
+    resultado.append(res)
+    c=c+1
+  print (resultado)
+    
+
 def obtenersentidos(linea):
   #print ("linea: "+ linea);
   inisen =respuesta.find('-')-8;
@@ -42,6 +57,9 @@ def freelingsentidosFrase(frase):
   return respuesta
 
 
+global producto_inferido
+global parametros
+
 DATA = directoriofreeling +"/data";
 LANG="/es";
 freeling.util_init_locale("default");
@@ -60,6 +78,8 @@ acciones_transferencia= ['transferir','transportar','trasladar','transferir','tr
 
 productos=['movimiento','agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'claves', 'alertas y notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósitos', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonarios', 'extacto mensual', 'cajero/oficina', 'remesas', 'otros dispositivos', 'cuentas', 'transferencia', 'recibos / adeudos', 'carteras', 'fondo de inversión', 'reembolso', 'seguros', 'recibos no domiciliado', 'comisiones', 'valores', 'cheques', 'traspasos a tarjeta', 'europlazo', 'movimientos', 'tarjeta', 'divisas', 'préstamos', 'efectivo móvil', 'fondos de inversión / planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
 acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modificar', 'seguros', 'cliente', 'opv', 'asesoramiento', 'extracto mensual', 'operaciones', 'seguridad', 'depósitos', 'planes', 'simular', 'consulta','consulta', 'realizar', 'cuentas', 'tarjetas', 'fondos', 'consulta de mercado', 'operar', 'gestionar', 'alertas', 'transferencias', 'área_personal', 'valores', 'contratar','consultar']
+
+conjunto_acciones_transferencia=[('realizar',0.25),('anular',0.25),('mover',0.25),('modificar',0.25)]
 
 sentidosaccion=""
 sentidosproducto=""
@@ -164,5 +184,11 @@ while producto_inferido=="" and contsen<len(sentidosproducto):
 #Extraigo los parámetros, pero no hago nada con ellos
 parametros=intencion[2].lower().replace('\n','')
 #print("param: " + parametros)
-resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros}, ensure_ascii=False, encoding='utf8')
-print (resultado)
+
+#Compruebo no tengo acción y el producto es una transferencia
+#print ("TENGO " + accion_inferida +"|"+ producto_inferido)
+if(accion_inferida==""):
+  devuelvo_probabilidades()
+else:
+  resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros}, ensure_ascii=False, encoding='utf8')
+  print (resultado)
