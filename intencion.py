@@ -51,7 +51,7 @@ def resultado():
     producto_inferido=""
     parametros_inferidos=""
     oracion = "Quiero " + oracion.lower()
-    #print(oracion)
+    #print("quiero " + oracion)
     os.system("echo \"" + oracion + "\" | analyzer_client localhost:50005 > ../extractorIntencionSuperbuscador/aux.txt")
     ficheroaux = open('../extractorIntencionSuperbuscador/aux.txt')
     analisis(ficheroaux)
@@ -92,13 +92,13 @@ def sintagmanominal(fichero):
       fin_oracion = 1;
       #print("ejecuto res")
       resultado()
-    elif linea.find('adj-mod')>=0:
+    elif linea.find('adj-mod')>=0 or linea.find('obj-prep')>=0 or linea.find('sn-mod')>=0 :
       #print (" PAL: " + pal)
-      parametros_inferidos= parametros_inferidos + " " + pal
-    elif linea.find('obj-prep')>=0:
-      parametros_inferidos= parametros_inferidos + " " + pal
-    elif linea.find('sn-mod')>=0:
-      parametros_inferidos= parametros_inferidos + " " + pal
+      if(parametros_inferidos!=""):
+        parametros_inferidos= parametros_inferidos + " " + pal
+      else :
+        parametros_inferidos=  pal
+
 
 
 def analisis(fichero):
