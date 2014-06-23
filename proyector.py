@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import os 
 ## Direcorio de instalación del API de python de freeling
 directoriofreeling= (os.environ ['FREELING_PYTHON'] )
 directorio = directoriofreeling +"/APIs/python"
 import sys
+sys.getfilesystemencoding()
 sys.path.append( directorio  )
 import freeling
 import subprocess
@@ -66,7 +68,7 @@ accion_inferida=""
 
 
 #Recupero el parámetro de entrada
-entrada = sys.argv[1]
+entrada =os.fsencode(sys.argv[1]).decode('utf-8')
 #print (" entrada " +entrada)
 intencion= entrada.split("|");
 
@@ -161,6 +163,6 @@ while producto_inferido=="" and contsen<len(sentidosproducto):
   contsen=contsen+1
 #Extraigo los parámetros, pero no hago nada con ellos
 parametros=intencion[2].lower().replace('\n','')
-
-resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
+#print("param: " + parametros)
+resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros}, ensure_ascii=False, encoding='utf8')
 print (resultado)

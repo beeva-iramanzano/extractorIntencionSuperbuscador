@@ -59,7 +59,7 @@ acciones_transferencia= ['transferir','transportar','trasladar','transferir','tr
 productos=['movimiento','agenda de contacto', 'foto', 'etf', 'carteras gestionadas', 'warrants', 'clave', 'alerta', 'notificaciones', 'pias', 'área personal', 'ote', 'configuración personalizada', 'depósito', 'carteras asesoradas', 'colabor@', 'correspondencia virtual', 'impuestos', 'sicavs', 'oasys', 'moneda extranjera', 'talonario', 'extacto mensual', 'cajero/oficina', 'remesa', 'otros dispositivos', 'cuentas', 'transferencia', 'recibo','adeudo', 'cartera', 'fondo de inversión', 'reembolso', 'seguro', 'recibos no domiciliado', 'comisión', 'valor', 'cheque', 'traspasos a tarjeta', 'europlazo',  'tarjeta', 'divisa', 'préstamo', 'efectivo móvil', 'fondos de inversión', 'planes de pensiones', 'alias', 'recarga de móvil', 'iban',  'datos personales', 'ppa', 'alta', 'alertas', 'operaciones ágiles', 'hipoteca', 'plan de pensiones', 'posición global', 'gráficos']
 acciones=['movimientos', 'registrado', 'usuario', 'anular', 'hipoteca', 'modificar', 'seguros', 'cliente', 'opv', 'asesoramiento', 'extracto mensual', 'operaciones', 'seguridad', 'depósitos', 'planes', 'simular', 'consulta','consulta', 'realizar', 'cuentas', 'tarjetas', 'fondos', 'consulta de mercado', 'operar', 'gestionar', 'alertas', 'transferencias', 'área_personal', 'valores', 'contratar','consultar']
 
-fichero = open('../extractorIntencionSuperbuscador/aux.csv')
+fichero = open('../extractorIntencionSuperbuscador/aux.csv', encoding='utf-8')
 
 entrada=fichero.readline();
 entrada=entrada.replace('\n','')
@@ -160,7 +160,7 @@ while entrada:
   #Extraigo los parámetros, pero no hago nada con ellos
   parametros=intencion[2].lower().replace('\n','')
 
-  resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
+  resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros},  ensure_ascii=False, encoding='utf8');
   print (resultado)
 
   entrada=fichero.readline();
