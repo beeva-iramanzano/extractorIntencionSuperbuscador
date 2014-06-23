@@ -71,11 +71,9 @@ entrada = sys.argv[1]
 #print (" entrada " +entrada)
 intencion= entrada.split("|");
 
-
-# ANALIZO LA ACCION DE LA INTENCIÓN
-accion= intencion[0].lower()
+accion= intencion[0].lower().replace('\n','');
 respuesta=freelingsentidosFrase("Yo voy a " +accion + ".")
-#print(respuesta)
+#print(accion +"|")
 
 #print ("sentidosaccion: "+ sentidosaccion);
 sentidosaccion=""
@@ -85,87 +83,84 @@ accion_inferida=""
 
 sentidosaccion=obtenersentidos(respuesta)
 
-
-
 contsen=0
 while accion_inferida=="" and contsen<len(sentidosaccion):
-  sen  = sentidosaccion[contsen]
-  #print ("Sentido: "+ sen)
-  #Obtengo la info del sentido
-  senseinfo = semantic.get_sense_info (sen)
-  #Obtengo los SINONIMOS
-  sinos= senseinfo.words;
-  #for sino in sinos:
-    #print ("  sinonimo: " + sino)
-  #Miro con cual de las acciones se corresponde la accion extraida
-  #Comparo todas las acciones con todos los sinonimos
-  contsin=0;
-  while accion_inferida=="" and contsin<len(sinos):
-    sino=sinos[contsin]
-    for a in acciones:
-      if a==sino:
-        accion_inferida=a
-        #print ("Accion inferida: " +accion_inferida)
+sen  = sentidosaccion[contsen]
+#print ("Sentido: "+ sen)
+#Obtengo la info del sentido
+senseinfo = semantic.get_sense_info (sen)
+#Obtengo los SINONIMOS
+sinos= senseinfo.words;
+#for sino in sinos:
+  #print ("  sinonimo: " + sino)
+#Miro con cual de las acciones se corresponde la accion extraida
+#Comparo todas las acciones con todos los sinonimos
+contsin=0;
+while accion_inferida=="" and contsin<len(sinos):
+  sino=sinos[contsin]
+  for a in acciones:
+    if a==sino:
+      accion_inferida=a
+      #print ("Accion inferida: " +accion_inferida)
 
-    #Si no he encontrado una accion asociada, busco en las acciones sinonimos de transferencias
-    contactra=0
-    if accion_inferida=="":
-      while producto_inferido=="" and contactra<len(acciones_transferencia):
-        t=acciones_transferencia[contactra]
-        if t==sino:
-            producto_inferido="transferencia"
-            #print ("Producto inferido: " + producto_inferido)
-        contactra=contactra+1
+  #Si no he encontrado una accion asociada, busco en las acciones sinonimos de transferencias
+  contactra=0
+  if accion_inferida=="":
+    while producto_inferido=="" and contactra<len(acciones_transferencia):
+      t=acciones_transferencia[contactra]
+      if t==sino:
+          producto_inferido="transferencia"
+          #print ("Producto inferido: " + producto_inferido)
+      contactra=contactra+1
 
-    contsin=contsin+1
+  contsin=contsin+1
 
-  contsen=contsen+1
+contsen=contsen+1
 
 
 # ANALIZO EL PRODUCTO DE LA INTENCIÓN
-producto= intencion[1].lower()
-print ("producto " + producto)
+producto= intencion[1].lower().replace('\n','')
+#print ("producto " + producto)
 #Compruebo si es plural
 respuesta=freelingsentidos(producto + ".")
 #print("respuestas " +respuesta)
 if(respuesta.find('NCFP000')>=0):
-  #print("entro " +producto[:len(producto)-2] )
-  respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+#print("entro " +producto[:len(producto)-2] )
+respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+sentidosproducto=obtenersentidos(respuesta)
+if(sentidosproducto==""):
+  respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
   sentidosproducto=obtenersentidos(respuesta)
-  if(sentidosproducto==""):
-    respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
-    sentidosproducto=obtenersentidos(respuesta)
-    #print ("respuesta: "+ respuesta)
+  #print ("respuesta: "+ respuesta)
 else:
-  sentidosproducto=obtenersentidos(respuesta)
+sentidosproducto=obtenersentidos(respuesta)
 
 
 contsen=0
 while producto_inferido=="" and contsen<len(sentidosproducto):
-  sen  = sentidosproducto[contsen]
-  #print ("Sentido: "+ sen)
-  #Obtengo la info del sentido
-  senseinfo = semantic.get_sense_info (sen)
-  #Obtengo los SINONIMOS
-  sinos= senseinfo.words;
-  #for sino in sinos:
-    #print ("  sinonimo: " + sino)
-  #Miro con cual de las acciones se corresponde la accion extraida
-  #Comparo todas las acciones con todos los sinonimos
-  contsin=0;
-  #print ("len " + str(len(sinos)) )flinea
-  while producto_inferido=="" and contsin<len(sinos):
-    #print("cont" +str(contsin))
-    sino=sinos[contsin]
-    contsin=contsin+1
-    for a in productos:
-      if a==sino:
-        producto_inferido=a
-        #print ("Producto inferido: " + producto_inferido)
-  contsen=contsen+1
+sen  = sentidosproducto[contsen]
+#print ("Sentido: "+ sen)
+#Obtengo la info del sentido
+senseinfo = semantic.get_sense_info (sen)
+#Obtengo los SINONIMOS
+sinos= senseinfo.words;
+#for sino in sinos:
+  #print ("  sinonimo: " + sino)
+#Miro con cual de las acciones se corresponde la accion extraida
+#Comparo todas las acciones con todos los sinonimos
+contsin=0;
+#print ("len " + str(len(sinos)) )flinea
+while producto_inferido=="" and contsin<len(sinos):
+  #print("cont" +str(contsin))
+  sino=sinos[contsin]
+  contsin=contsin+1
+  for a in productos:
+    if a==sino:
+      producto_inferido=a
+      #print ("Producto inferido: " + producto_inferido)
+contsen=contsen+1
 #Extraigo los parámetros, pero no hago nada con ellos
-parametros=intencion[2].lower()
-
+parametros=intencion[2].lower().replace('\n','')
 
 resultado = json.dumps({"accion" :accion_inferida, "producto": producto_inferido, "parametro": parametros} );
 print (resultado)

@@ -79,13 +79,7 @@ while entrada:
   accion= intencion[0].lower().replace('\n','');
   respuesta=freelingsentidosFrase("Yo voy a " +accion + ".")
   #print(accion +"|")
-
-  #print ("sentidosaccion: "+ sentidosaccion);
-  sentidosaccion=""
-  sentidosproducto=""
-  producto_inferido=""
-  accion_inferida=""
-
+  
   sentidosaccion=obtenersentidos(respuesta)
 
   contsen=0
