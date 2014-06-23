@@ -10,12 +10,13 @@ import simplejson as json
 
 def obtenersentidos(linea):
   #print ("respuesta: "+ respuesta);
+  #print("entro")
   inisen =respuesta.find('-')-8;
   if( respuesta.find(':') >=0):
-    finsen =respuesta.find(')')-1 ;
-    sentidos = respuesta[inisen:finsen];
-    #print ("sentidosproducto: "+ sentidosproducto);
+    sentidos = respuesta[inisen:];
+    print ("sentidosproducto: "+ sentidos);
     sentidos=sentidos.split(':0/');
+    #print("HOLA")
   else:
     sentidos=""
 
@@ -27,6 +28,8 @@ def freelingsentidos(frase):
   respuesta = subprocess.check_output(command, shell=True)
   r= str(respuesta)
   respuesta=respuesta.decode("utf-8")
+  respuesta=respuesta.split('\n')
+  respuesta=respuesta[0]
   return respuesta
 
 def freelingsentidosFrase(frase):
@@ -64,7 +67,7 @@ fichero = open('../extractorIntencionSuperbuscador/fich.csv')
 
 entrada=fichero.readline();
 entrada=entrada.replace(' ','')
-print (" entrada " +entrada)
+#print (" entrada " +entrada)
 intencion= entrada.split("|");
 #Leo el fichero
 while entrada:
@@ -118,21 +121,24 @@ while entrada:
   # ANALIZO EL PRODUCTO DE LA INTENCIÓN
   producto= intencion[1].lower().replace(' ','')
   #print("producto " +producto)
+
   #Compruebo si es plural
   respuesta=freelingsentidos(producto + ".")
-  #print("respuestas " +respuesta)
+  print("respuestas " +respuesta)
   if(respuesta.find('NCFP000')>=0):
     #print("entro " +producto[:len(producto)-2] )
-    respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
+    respuesta=freelingsentidos( producto[:len(producto)-1] + "." )
+    print("respuestas " +respuesta)
     sentidosproducto=obtenersentidos(respuesta)
     if(sentidosproducto==""):
-      respuesta=freelingsentidos( producto[:len(producto)-3] + "." )
+      respuesta=freelingsentidos( producto[:len(producto)-2] + "." )
       sentidosproducto=obtenersentidos(respuesta)
   else:
     sentidosproducto=obtenersentidos(respuesta)
 
   contsen=0 
-  while producto_inferido=="" and contsen<len(sentidosproducto) and sentidosproducto=="":
+  print("n sent " + str(len(sentidosproducto))) 
+  while producto_inferido=="" and contsen<len(sentidosproducto) and sentidosproducto!="":
     sen  = sentidosproducto[contsen]
     #print ("Sentido: "+ sen)
     #Obtengo la info del sentido
@@ -150,7 +156,8 @@ while entrada:
         if a==sino:
           producto_inferido=a
           #print ("Producto inferido: " + producto_inferido)
-    contsin=contsin+1
+      contsin=contsin+1
+    contsen=contsen+1
   #Extraigo los parámetros, pero no hago nada con ellos
   parametros=intencion[2].lower().replace(' ' ,'')
   #print("parametros " +parametros)
