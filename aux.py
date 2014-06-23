@@ -68,7 +68,7 @@ entrada=entrada.replace('\n','')
 intencion= entrada.split("|");
 #Leo el fichero
 while entrada:
-  #print (" entrada " +entrada)
+  print (" entrada " +entrada)
   sentidosaccion=""
   sentidosproducto=""
   producto_inferido=""
