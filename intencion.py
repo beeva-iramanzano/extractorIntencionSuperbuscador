@@ -22,14 +22,12 @@ freeling.util_init_locale("default")
 
 
 def palabra(linea):
-  global oracion;
   #print("la palabra " + pal)
   ini =linea.find('(')+1;
   fin =linea.find(')');
   lineainfo = linea[ini:fin];
   infoinipal= lineainfo.find(' ')
   pal=lineainfo[:infoinipal]
-  oracion = oracion+ " " + pal
   return pal
 
 def resultado():
@@ -113,7 +111,6 @@ def analisis(fichero):
   global fin_oracion 
   global fin_sn
   global fin_objdirec
-  global oracion
 
  
   linea=fichero.readline();
@@ -125,7 +122,6 @@ def analisis(fichero):
   fin_oracion =0
   fin_sn=0
   fin_objdirec=0
-  oracion=""
 
   #Leo el fichero
   while linea:
@@ -181,6 +177,14 @@ global parametros_inferidos_aux
 global ejecutada_segunda
 
 ejecutada_segunda=0
+oracion=""
+n=len(sys.argv)
+c=1
+while c<n:
+  oracion =oracion + " " + os.fsencode(sys.argv[c]).decode('utf-8')
+  c=c+1
+
+#print("oracion " + oracion)
 
 fichero = open('../extractorIntencionSuperbuscador/analisis_freeling.txt')
 analisis(fichero)
