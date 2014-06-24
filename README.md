@@ -1,18 +1,7 @@
-ExtraerIntencion
-================
+INTENCIÓN BBVA
+==============
 
 Módulo desarrollado en Python para la extracción de la intención de un usuario, es decir cual de las acciones disponibles en la Web del BBVA desea llevar a cabo.
-
-
-Instalación
------------
-
-Para la ejecución de este módulo es necesario:
-. Instalar 'Freeling'
-. Instalar la API para Python que incluye (versión 3.1 o superior)
-. Definir la variable de entorno FREELING_PYTHON para que contenga el directorio de instalación de Freeling (ejecutar vi /etc/environment para crear la variable de entorno)
-. Levantar el servidor de freeling para análisis morfológico: analyze -f es.cfg --outf tagged  –sense all --server --port 50006
-
 
 
 Extracción de  intención
@@ -34,3 +23,13 @@ Para proyectar la intención del usuario en las acciones del BBVA se compara el 
 Para la obtención de los sinónimos de las distintas palabras se utiliza el modulo de Freeling 'Semantic Database Module'
 
 En caso de  haber identificado el producto pero no la acción, las respuesta del sistema consistirá en un conjunto de intenciones con distintas probabilidades asociadas. Básicamente, se devolverá un intención por cada acción disponible para dicho producto. Las probabilidades asociada a cada acción del producto, se modificarán en función de al verificación de la intención real del usuario. Para ello será necesario la construcción de un módulo que reciba el par acción/producto llevado a acabo por el usuario y actualice la probabilidad correspondiente.
+
+Instalación
+-----------
+
+Para la ejecución de este módulo es necesario:
+- Instalar 'Freeling'
+- Instalar la API para Python que incluye (versión 3.1 o superior)
+- Definir la variable de entorno FREELING_PYTHON para que contenga el directorio de instalación de Freeling (ejecutar vi /etc/environment para crear la variable de entorno)
+- Levantar el servidor de freeling para análisis morfológico: analyze -f es.cfg --outf tagged  –sense all --server --port 50006
+
